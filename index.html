@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -12,111 +13,205 @@
     margin: 0;
     overflow-x: hidden;
   }
-  /* Sticky Nav */
+  /* Sticky Nav - Mobile optimized */
   nav {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.95);
     backdrop-filter: blur(5px);
-    padding: 10px 5%;
+    padding: 8px 3%;
     display: flex;
     justify-content: space-around;
     z-index: 999;
     flex-wrap: wrap;
+    box-sizing: border-box;
   }
   nav a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    padding: 10px;
+    padding: 8px 6px;
     display: block;
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-size: clamp(0.8rem, 3vw, 1.1rem);
+    text-align: center;
+    flex: 1;
+    min-width: 60px;
   }
-  nav a:hover { color: gold; }
-  section {
-    padding: 80px 5% 60px; /* extra top padding for fixed nav */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 0.8s ease;
-    box-sizing: border-box;
+  nav a:hover, nav a:active { 
+    color: gold; 
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 4px;
   }
-  section.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  h1, h2 { text-align: center; margin-bottom: 20px; }
-  .highlight-ross { color: gold; }
-  .highlight-50 { color: silver; }
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-    max-width: 600px;
-  }
-  .split {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-  }
-  .split .card {
-    flex: 1 1 300px;
-    padding: 20px;
-    border-radius: 8px;
-    box-sizing: border-box;
-  }
-  .ross-card { background: linear-gradient(145deg, #FFD700, #B8860B); }
-  .cent-card { background: linear-gradient(145deg, #C0C0C0, #505050); }
-  ul.timeline { list-style: none; padding: 0; }
-  ul.timeline li {
-    padding: 10px 0;
-    border-left: 2px solid white;
-    padding-left: 20px;
-    margin-left: 10px;
-    position: relative;
-  }
-  ul.timeline li::before {
-    content: '';
-    position: absolute;
-    left: -8px;
-    top: 14px;
-    width: 12px;
-    height: 12px;
-    background: white;
-    border-radius: 50%;
-  }
-  #intro { background: radial-gradient(circle at center, #000, #111); text-align: center; }
-  #versus {
-    font-size: 4rem;
-    font-weight: bold;
-    color: red;
-    animation: flash 1s infinite alternate;
-    cursor: pointer;
-    margin: 20px 0;
-    touch-action: manipulation;
-  }
-  @keyframes flash { from { opacity: 0; } to { opacity: 1; } }
-  .next-btn {
-    margin-top: 30px;
-    padding: 12px 20px;
-    background: gold;
-    color: black;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 6px;
-    font-size: 1rem;
-    touch-action: manipulation;
-  }
-  .next-btn:hover { background: orange; }
+
+/* Enhanced section loading for mobile */
+section {
+padding: 90px 5% 60px; /* increased top padding for mobile nav */
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+opacity: 0;
+transform: translateY(40px);
+transition: opacity 0.6s ease, transform 0.6s ease;
+box-sizing: border-box;
+will-change: opacity, transform; /* Optimize for mobile animations */
+}
+
+section.visible {
+opacity: 1;
+transform: translateY(0);
+}
+
+/* Force visibility on load for intro */
+section#intro {
+opacity: 1;
+transform: translateY(0);
+}
+
+h1, h2 {
+text-align: center;
+margin-bottom: 20px;
+font-size: clamp(1.5rem, 5vw, 3rem);
+}
+
+.highlight-ross { color: gold; }
+.highlight-50 { color: silver; }
+
+/* Canvas mobile fixes */
+canvas {
+width: 100% !important;
+height: 300px !important; /* Fixed height for mobile */
+max-width: 100%;
+touch-action: none; /* Prevent scroll conflicts */
+}
+
+/* Mobile-responsive layout */
+.split {
+display: flex;
+gap: 15px;
+flex-direction: column;
+justify-content: center;
+width: 100%;
+max-width: 1000px;
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+.split {
+flex-direction: row;
+gap: 20px;
+}
+canvas {
+height: 400px !important;
+}
+nav {
+padding: 10px 5%;
+}
+section {
+padding: 80px 5% 60px;
+}
+}
+
+.split .card {
+flex: 1;
+padding: 20px;
+border-radius: 8px;
+box-sizing: border-box;
+min-height: 200px;
+}
+
+.ross-card { background: linear-gradient(145deg, #FFD700, #B8860B); }
+.cent-card { background: linear-gradient(145deg, #C0C0C0, #505050); }
+
+ul.timeline {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+ul.timeline li {
+padding: 12px 0;
+border-left: 2px solid white;
+padding-left: 20px;
+margin-left: 10px;
+position: relative;
+font-size: clamp(0.9rem, 2.5vw, 1rem);
+}
+
+ul.timeline li::before {
+content: ‘’;
+position: absolute;
+left: -8px;
+top: 16px;
+width: 12px;
+height: 12px;
+background: white;
+border-radius: 50%;
+}
+
+#intro {
+background: radial-gradient(circle at center, #000, #111);
+text-align: center;
+}
+
+#versus {
+font-size: clamp(2.5rem, 8vw, 4rem);
+font-weight: bold;
+color: red;
+animation: flash 1s infinite alternate;
+cursor: pointer;
+margin: 20px 0;
+touch-action: manipulation;
+user-select: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+@keyframes flash {
+from { opacity: 0.7; }
+to { opacity: 1; }
+}
+
+.next-btn {
+margin-top: 30px;
+padding: 14px 24px;
+background: gold;
+color: black;
+border: none;
+cursor: pointer;
+font-weight: bold;
+border-radius: 6px;
+font-size: clamp(0.9rem, 2.5vw, 1rem);
+touch-action: manipulation;
+user-select: none;
+-webkit-tap-highlight-color: transparent;
+min-height: 44px; /* iOS touch target minimum */
+}
+
+.next-btn:hover, .next-btn:active {
+background: orange;
+transform: scale(0.98);
+}
+
+/* Loading indicator for charts */
+.chart-container {
+position: relative;
+width: 100%;
+height: 300px;
+}
+
+.chart-loading {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: #666;
+font-size: 0.9rem;
+}
 </style>
+
 </head>
 <body>
 
@@ -137,22 +232,38 @@
 
 <section id="earnings">
   <h2>Lifetime Gross Earnings</h2>
-  <canvas id="grossChart"></canvas>
+  <div class="chart-container">
+    <div class="chart-loading">Loading chart...</div>
+    <canvas id="grossChart"></canvas>
+  </div>
   <button class="next-btn" data-next="#breakdown">Next: Revenue Breakdown</button>
 </section>
 
 <section id="breakdown">
   <h2>Revenue Breakdown</h2>
   <div class="split">
-    <div class="card ross-card"><canvas id="breakdownRoss"></canvas></div>
-    <div class="card cent-card"><canvas id="breakdown50"></canvas></div>
+    <div class="card ross-card">
+      <div class="chart-container">
+        <div class="chart-loading">Loading chart...</div>
+        <canvas id="breakdownRoss"></canvas>
+      </div>
+    </div>
+    <div class="card cent-card">
+      <div class="chart-container">
+        <div class="chart-loading">Loading chart...</div>
+        <canvas id="breakdown50"></canvas>
+      </div>
+    </div>
   </div>
   <button class="next-btn" data-next="#growth">Next: Wealth Growth</button>
 </section>
 
 <section id="growth">
   <h2>Wealth Growth Over Time</h2>
-  <canvas id="growthChart"></canvas>
+  <div class="chart-container">
+    <div class="chart-loading">Loading chart...</div>
+    <canvas id="growthChart"></canvas>
+  </div>
   <button class="next-btn" data-next="#moves">Next: Power Moves</button>
 </section>
 
@@ -164,7 +275,7 @@
       <ul class="timeline">
         <li>2011 — Buys first Wingstop</li>
         <li>2012 — MMG peak with Meek Mill & Wale</li>
-        <li>2014 — Buys “Promise Land” estate</li>
+        <li>2014 — Buys "Promise Land" estate</li>
         <li>2020 — 25+ Wingstops nationwide</li>
       </ul>
     </div>
@@ -181,93 +292,254 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-  // Intersection animation
-  const sections = document.querySelectorAll('section');
+  let chartsLoaded = false;
+  
+  // Enhanced intersection observer for mobile
+  const sections = document.querySelectorAll('section:not(#intro)');
+  const observerOptions = {
+    threshold: [0.1, 0.3], // Multiple thresholds for better mobile detection
+    rootMargin: '-10px 0px -10px 0px' // Account for mobile nav
+  };
+  
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
+      if (entry.isIntersecting) {
+        // Add a small delay for smoother mobile performance
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 100);
+      }
     });
-  }, { threshold: 0.2 });
+  }, observerOptions);
+  
   sections.forEach(sec => observer.observe(sec));
 
-  // Smooth scroll with offset
+  // Improved smooth scroll with better mobile support
   function smoothScrollTo(targetId) {
-    const offset = document.querySelector('nav').offsetHeight;
+    const navHeight = document.querySelector('nav').offsetHeight;
     const element = document.querySelector(targetId);
-    const y = element.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top: y, behavior: 'smooth' });
+    
+    if (!element) return;
+    
+    const elementTop = element.getBoundingClientRect().top + window.scrollY;
+    const offsetPosition = elementTop - navHeight - 10; // Extra 10px buffer
+    
+    // Use requestAnimationFrame for smoother mobile scrolling
+    window.scrollTo({ 
+      top: offsetPosition, 
+      behavior: 'smooth' 
+    });
+    
+    // Fallback for older mobile browsers
+    setTimeout(() => {
+      if (Math.abs(window.scrollY - offsetPosition) > 50) {
+        window.scrollTo(0, offsetPosition);
+      }
+    }, 1000);
   }
 
-  // Nav clicks
+  // Enhanced navigation with mobile touch support
   document.querySelectorAll('a[data-scroll]').forEach(link => {
     link.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      smoothScrollTo(link.getAttribute('href'));
+    });
+    
+    // Add touch support for mobile
+    link.addEventListener('touchend', e => {
       e.preventDefault();
       smoothScrollTo(link.getAttribute('href'));
     });
   });
 
-  // VS click -> Earnings
-  document.getElementById('versus').addEventListener('click', () => {
+  // VS click -> Earnings with mobile support
+  const versusElement = document.getElementById('versus');
+  versusElement.addEventListener('click', (e) => {
+    e.preventDefault();
+    smoothScrollTo('#earnings');
+  });
+  
+  versusElement.addEventListener('touchend', (e) => {
+    e.preventDefault();
     smoothScrollTo('#earnings');
   });
 
-  // Next buttons
+  // Next buttons with mobile support
   document.querySelectorAll('.next-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      smoothScrollTo(btn.getAttribute('data-next'));
+    });
+    
+    btn.addEventListener('touchend', (e) => {
+      e.preventDefault();
       smoothScrollTo(btn.getAttribute('data-next'));
     });
   });
 
-  // Charts
-  new Chart(document.getElementById('grossChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Rick Ross', '50 Cent'],
-      datasets: [{
-        label: 'Lifetime Gross Earnings (USD Millions)',
-        data: [170, 340],
-        backgroundColor: ['gold', 'silver']
-      }]
-    },
-    options: { responsive: true, maintainAspectRatio: false }
-  });
+  // Initialize charts with loading states and mobile optimization
+  function initializeCharts() {
+    if (chartsLoaded) return;
+    chartsLoaded = true;
+    
+    // Hide loading indicators
+    document.querySelectorAll('.chart-loading').forEach(loader => {
+      loader.style.display = 'none';
+    });
+    
+    // Chart.js mobile-optimized configuration
+    const mobileConfig = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: window.innerWidth < 768 ? 10 : 12
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            font: {
+              size: window.innerWidth < 768 ? 10 : 12
+            }
+          }
+        },
+        y: {
+          ticks: {
+            font: {
+              size: window.innerWidth < 768 ? 10 : 12
+            }
+          }
+        }
+      }
+    };
 
-  new Chart(document.getElementById('breakdownRoss'), {
-    type: 'pie',
-    data: {
-      labels: ['Music Sales', 'Streaming', 'Touring', 'Wingstop', 'Investments'],
-      datasets: [{
-        data: [2.3, 8.4, 28, 84, 47.3],
-        backgroundColor: ['#FFD700', '#DAA520', '#B8860B', '#8B7500', '#5A4A00']
-      }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Rick Ross Revenue Breakdown' } } }
-  });
+    // Gross earnings chart
+    new Chart(document.getElementById('grossChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Rick Ross', '50 Cent'],
+        datasets: [{
+          label: 'Lifetime Gross Earnings (USD Millions)',
+          data: [170, 340],
+          backgroundColor: ['gold', 'silver']
+        }]
+      },
+      options: mobileConfig
+    });
 
-  new Chart(document.getElementById('breakdown50'), {
-    type: 'pie',
-    data: {
-      labels: ['Music Sales', 'Touring', 'Vitaminwater', 'TV/Film', 'Merch & Liquor'],
-      datasets: [{
-        data: [30, 28, 125, 35, 60],
-        backgroundColor: ['#C0C0C0', '#A9A9A9', '#808080', '#696969', '#505050']
-      }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '50 Cent Revenue Breakdown' } } }
-  });
+    // Rick Ross breakdown
+    new Chart(document.getElementById('breakdownRoss'), {
+      type: 'pie',
+      data: {
+        labels: ['Music Sales', 'Streaming', 'Touring', 'Wingstop', 'Investments'],
+        datasets: [{
+          data: [2.3, 8.4, 28, 84, 47.3],
+          backgroundColor: ['#FFD700', '#DAA520', '#B8860B', '#8B7500', '#5A4A00']
+        }]
+      },
+      options: {
+        ...mobileConfig,
+        plugins: { 
+          ...mobileConfig.plugins,
+          title: { 
+            display: true, 
+            text: 'Rick Ross Revenue',
+            font: {
+              size: window.innerWidth < 768 ? 12 : 16
+            }
+          } 
+        }
+      }
+    });
 
-  new Chart(document.getElementById('growthChart'), {
-    type: 'line',
-    data: {
-      labels: ['2003', '2005', '2009', '2013', '2017', '2021', '2025'],
-      datasets: [
-        { label: 'Rick Ross', data: [1, 5, 15, 40, 70, 100, 120], borderColor: 'gold', fill: false },
-        { label: '50 Cent', data: [10, 70, 160, 180, 130, 150, 170], borderColor: 'silver', fill: false }
-      ]
-    },
-    options: { responsive: true, maintainAspectRatio: false }
+    // 50 Cent breakdown
+    new Chart(document.getElementById('breakdown50'), {
+      type: 'pie',
+      data: {
+        labels: ['Music Sales', 'Touring', 'Vitaminwater', 'TV/Film', 'Merch & Liquor'],
+        datasets: [{
+          data: [30, 28, 125, 35, 60],
+          backgroundColor: ['#C0C0C0', '#A9A9A9', '#808080', '#696969', '#505050']
+        }]
+      },
+      options: {
+        ...mobileConfig,
+        plugins: { 
+          ...mobileConfig.plugins,
+          title: { 
+            display: true, 
+            text: '50 Cent Revenue',
+            font: {
+              size: window.innerWidth < 768 ? 12 : 16
+            }
+          } 
+        }
+      }
+    });
+
+    // Growth chart
+    new Chart(document.getElementById('growthChart'), {
+      type: 'line',
+      data: {
+        labels: ['2003', '2005', '2009', '2013', '2017', '2021', '2025'],
+        datasets: [
+          { 
+            label: 'Rick Ross', 
+            data: [1, 5, 15, 40, 70, 100, 120], 
+            borderColor: 'gold', 
+            backgroundColor: 'rgba(255, 215, 0, 0.1)',
+            fill: false,
+            tension: 0.4
+          },
+          { 
+            label: '50 Cent', 
+            data: [10, 70, 160, 180, 130, 150, 170], 
+            borderColor: 'silver', 
+            backgroundColor: 'rgba(192, 192, 192, 0.1)',
+            fill: false,
+            tension: 0.4
+          }
+        ]
+      },
+      options: mobileConfig
+    });
+  }
+
+  // Initialize charts when Chart.js is ready
+  if (window.Chart) {
+    initializeCharts();
+  } else {
+    window.addEventListener('load', initializeCharts);
+  }
+  
+  // Also initialize on DOM ready as backup
+  document.addEventListener('DOMContentLoaded', initializeCharts);
+  
+  // Handle orientation changes on mobile
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      // Trigger resize on all charts
+      Object.values(Chart.instances).forEach(chart => {
+        if (chart) chart.resize();
+      });
+    }, 500);
+  });
+  
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    Object.values(Chart.instances).forEach(chart => {
+      if (chart) chart.resize();
+    });
   });
 </script>
+
 </body>
 </html>

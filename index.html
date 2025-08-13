@@ -80,10 +80,10 @@ font-size: clamp(1.5rem, 5vw, 3rem);
 .highlight-ross { color: gold; }
 .highlight-50 { color: silver; }
 
-/* Canvas mobile fixes */
+/* Canvas responsive sizing */
 canvas {
 width: 100% !important;
-height: 300px !important; /* Fixed height for mobile */
+height: 250px !important; /* Base mobile height */
 max-width: 100%;
 touch-action: none; /* Prevent scroll conflicts */
 }
@@ -105,13 +105,32 @@ flex-direction: row;
 gap: 20px;
 }
 canvas {
-height: 400px !important;
+height: 400px !important; /* Larger charts on desktop */
 }
 nav {
 padding: 10px 5%;
 }
 section {
 padding: 80px 5% 60px;
+}
+.chart-container {
+height: 400px; /* Match canvas height */
+}
+}
+
+/* Large desktop optimization */
+@media (min-width: 1200px) {
+canvas {
+height: 450px !important; /* Even larger on big screens */
+}
+.chart-container {
+height: 450px;
+}
+.split .card canvas {
+height: 350px !important; /* Slightly smaller for side-by-side cards */
+}
+.split .card .chart-container {
+height: 350px;
 }
 }
 
@@ -325,7 +344,7 @@ padding: 12px;
 .chart-container {
 position: relative;
 width: 100%;
-height: 300px;
+height: 250px; /* Base mobile height */
 }
 
 .chart-loading {
@@ -539,7 +558,7 @@ font-size: 0.9rem;
       loader.style.display = 'none';
     });
     
-    // Chart.js mobile-optimized configuration
+    // Chart.js responsive configuration with proper desktop scaling
     const mobileConfig = {
       responsive: true,
       maintainAspectRatio: false,
@@ -547,7 +566,7 @@ font-size: 0.9rem;
         legend: {
           labels: {
             font: {
-              size: window.innerWidth < 768 ? 10 : 12
+              size: window.innerWidth < 768 ? 10 : window.innerWidth < 1200 ? 14 : 16
             }
           }
         }
@@ -556,14 +575,14 @@ font-size: 0.9rem;
         x: {
           ticks: {
             font: {
-              size: window.innerWidth < 768 ? 10 : 12
+              size: window.innerWidth < 768 ? 10 : window.innerWidth < 1200 ? 12 : 14
             }
           }
         },
         y: {
           ticks: {
             font: {
-              size: window.innerWidth < 768 ? 10 : 12
+              size: window.innerWidth < 768 ? 10 : window.innerWidth < 1200 ? 12 : 14
             }
           }
         }
@@ -602,7 +621,7 @@ font-size: 0.9rem;
             display: true, 
             text: 'Rick Ross Revenue',
             font: {
-              size: window.innerWidth < 768 ? 12 : 16
+              size: window.innerWidth < 768 ? 12 : window.innerWidth < 1200 ? 16 : 18
             }
           } 
         }
@@ -627,7 +646,7 @@ font-size: 0.9rem;
             display: true, 
             text: '50 Cent Revenue',
             font: {
-              size: window.innerWidth < 768 ? 12 : 16
+              size: window.innerWidth < 768 ? 12 : window.innerWidth < 1200 ? 16 : 18
             }
           } 
         }
@@ -682,8 +701,29 @@ font-size: 0.9rem;
     }, 500);
   });
   
-  // Handle window resize
+  // Handle window resize with proper chart resizing
   window.addEventListener('resize', () => {
+    // Update chart container heights based on new screen size
+    const containers = document.querySelectorAll('.chart-container');
+    containers.forEach(container => {
+      if (window.innerWidth >= 1200) {
+        if (container.closest('.split .card')) {
+          container.style.height = '350px';
+        } else {
+          container.style.height = '450px';
+        }
+      } else if (window.innerWidth >= 768) {
+        if (container.closest('.split .card')) {
+          container.style.height = '350px';
+        } else {
+          container.style.height = '400px';
+        }
+      } else {
+        container.style.height = '250px';
+      }
+    });
+    
+    // Resize all charts
     Object.values(Chart.instances).forEach(chart => {
       if (chart) chart.resize();
     });

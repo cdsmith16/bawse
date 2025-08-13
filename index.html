@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bawse vs Curtis</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+<style>
+  body {
+    background-color: #111;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+  }
+  section {
+    padding: 60px 5%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+  }
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .highlight-ross { color: gold; }
+  .highlight-50 { color: silver; }
+  canvas {
+    max-width: 800px;
+    margin: 20px auto;
+    display: block;
+  }
+  /* Split screen for Ross vs 50 sections */
+  .split {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .split .card {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  .ross-card { background: linear-gradient(145deg, #FFD700, #B8860B); }
+  .cent-card { background: linear-gradient(145deg, #C0C0C0, #505050); }
+  ul.timeline {
+    list-style: none;
+    padding: 0;
+  }
+  ul.timeline li {
+    padding: 10px 0;
+    border-left: 2px solid white;
+    padding-left: 20px;
+    margin-left: 10px;
+    position: relative;
+  }
+  ul.timeline li::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 14px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+
+<section>
+  <h1>Bawse vs Curtis</h1>
+  <p style="text-align:center">Rick Ross vs 50 Cent — earnings, empires, and power moves visualized like a rap battle.</p>
+</section>
+
+<section>
+  <h2>Lifetime Gross Earnings</h2>
+  <canvas id="grossChart"></canvas>
+</section>
+
+<section>
+  <h2>Revenue Breakdown</h2>
+  <div class="split">
+    <div class="card ross-card">
+      <canvas id="breakdownRoss"></canvas>
+    </div>
+    <div class="card cent-card">
+      <canvas id="breakdown50"></canvas>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Wealth Growth Over Time</h2>
+  <canvas id="growthChart"></canvas>
+</section>
+
+<section>
+  <h2>Signature Power Moves</h2>
+  <div class="split">
+    <div class="card ross-card">
+      <h3 class="highlight-ross">Rick Ross</h3>
+      <ul class="timeline">
+        <li>2011 — Buys first Wingstop</li>
+        <li>2012 — MMG peak with Meek Mill & Wale</li>
+        <li>2014 — Buys “Promise Land” estate</li>
+        <li>2020 — 25+ Wingstops nationwide</li>
+      </ul>
+    </div>
+    <div class="card cent-card">
+      <h3 class="highlight-50">50 Cent</h3>
+      <ul class="timeline">
+        <li>2004 — Vitaminwater equity deal</li>
+        <li>2007 — $100M+ cashout with Coca-Cola buyout</li>
+        <li>2014 — Launches Power on Starz</li>
+        <li>2017 — Sells EFFEN Vodka stake</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Charts
+  const grossChart = new Chart(document.getElementById('grossChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Rick Ross', '50 Cent'],
+      datasets: [{
+        label: 'Lifetime Gross Earnings (USD Millions)',
+        data: [170, 340],
+        backgroundColor: ['gold', 'silver']
+      }]
+    }
+  });
+
+  const breakdownRoss = new Chart(document.getElementById('breakdownRoss'), {
+    type: 'pie',
+    data: {
+      labels: ['Music Sales', 'Streaming', 'Touring', 'Wingstop', 'Investments'],
+      datasets: [{
+        data: [2.3, 8.4, 28, 84, 47.3],
+        backgroundColor: ['#FFD700', '#DAA520', '#B8860B', '#8B7500', '#5A4A00']
+      }]
+    },
+    options: { plugins: { title: { display: true, text: 'Rick Ross Revenue Breakdown' } } }
+  });
+
+  const breakdown50 = new Chart(document.getElementById('breakdown50'), {
+    type: 'pie',
+    data: {
+      labels: ['Music Sales', 'Touring', 'Vitaminwater', 'TV/Film', 'Merch & Liquor'],
+      datasets: [{
+        data: [30, 28, 125, 35, 60],
+        backgroundColor: ['#C0C0C0', '#A9A9A9', '#808080', '#696969', '#505050']
+      }]
+    },
+    options: { plugins: { title: { display: true, text: '50 Cent Revenue Breakdown' } } }
+  });
+
+  const growthChart = new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+      labels: ['2003', '2005', '2009', '2013', '2017', '2021', '2025'],
+      datasets: [
+        {
+          label: 'Rick Ross',
+          data: [1, 5, 15, 40, 70, 100, 120],
+          borderColor: 'gold',
+          fill: false
+        },
+        {
+          label: '50 Cent',
+          data: [10, 70, 160, 180, 130, 150, 170],
+          borderColor: 'silver',
+          fill: false
+        }
+      ]
+    }
+  });
+
+  // Scroll animation logic
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  sections.forEach(sec => observer.observe(sec));
+</script>
+
+</body>
+</html>

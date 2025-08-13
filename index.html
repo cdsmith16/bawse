@@ -14,7 +14,7 @@
     overflow-x: hidden;
   }
   section {
-    padding: 60px 5%;
+    padding: 40px 5%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -35,11 +35,12 @@
   .highlight-ross { color: gold; }
   .highlight-50 { color: silver; }
   canvas {
-    max-width: 800px;
+    max-width: 100%;
+    height: auto !important;
     margin: 20px auto;
     display: block;
   }
-  /* Split screen for Ross vs 50 sections */
+  /* Split screen */
   .split {
     display: flex;
     gap: 20px;
@@ -48,9 +49,10 @@
   }
   .split .card {
     flex: 1;
-    min-width: 300px;
+    min-width: 280px;
     padding: 20px;
     border-radius: 8px;
+    box-sizing: border-box;
   }
   .ross-card { background: linear-gradient(145deg, #FFD700, #B8860B); }
   .cent-card { background: linear-gradient(145deg, #C0C0C0, #505050); }
@@ -75,13 +77,45 @@
     background: white;
     border-radius: 50%;
   }
+  /* Versus intro */
+  #intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #000, #111);
+    min-height: 100vh;
+    text-align: center;
+    animation: fadeIn 1.5s ease forwards;
+  }
+  #intro h1 {
+    font-size: 3rem;
+    animation: popIn 1s ease forwards;
+  }
+  #intro p {
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards 1.5s;
+  }
+  #versus {
+    font-size: 4rem;
+    font-weight: bold;
+    color: red;
+    opacity: 0;
+    animation: flash 1s infinite alternate 2s;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes flash { from { opacity: 0; } to { opacity: 1; } }
 </style>
 </head>
 <body>
 
-<section>
-  <h1>Bawse vs Curtis</h1>
-  <p style="text-align:center">Rick Ross vs 50 Cent — earnings, empires, and power moves visualized like a rap battle.</p>
+<!-- Mogul Talk Intro -->
+<section id="intro" class="visible">
+  <h1 class="highlight-ross">Rick Ross</h1>
+  <div id="versus">VS</div>
+  <h1 class="highlight-50">50 Cent</h1>
+  <p>Mogul Talk — Hip-Hop Empire Showdown</p>
 </section>
 
 <section>
@@ -142,7 +176,8 @@
         data: [170, 340],
         backgroundColor: ['gold', 'silver']
       }]
-    }
+    },
+    options: { responsive: true, maintainAspectRatio: false }
   });
 
   const breakdownRoss = new Chart(document.getElementById('breakdownRoss'), {
@@ -154,7 +189,7 @@
         backgroundColor: ['#FFD700', '#DAA520', '#B8860B', '#8B7500', '#5A4A00']
       }]
     },
-    options: { plugins: { title: { display: true, text: 'Rick Ross Revenue Breakdown' } } }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Rick Ross Revenue Breakdown' } } }
   });
 
   const breakdown50 = new Chart(document.getElementById('breakdown50'), {
@@ -166,7 +201,7 @@
         backgroundColor: ['#C0C0C0', '#A9A9A9', '#808080', '#696969', '#505050']
       }]
     },
-    options: { plugins: { title: { display: true, text: '50 Cent Revenue Breakdown' } } }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '50 Cent Revenue Breakdown' } } }
   });
 
   const growthChart = new Chart(document.getElementById('growthChart'), {
@@ -187,16 +222,15 @@
           fill: false
         }
       ]
-    }
+    },
+    options: { responsive: true, maintainAspectRatio: false }
   });
 
-  // Scroll animation logic
+  // Scroll animation
   const sections = document.querySelectorAll('section');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
   }, { threshold: 0.2 });
 

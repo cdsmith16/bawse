@@ -13,8 +13,30 @@
     margin: 0;
     overflow-x: hidden;
   }
+  /* Sticky Nav */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 999;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  nav a:hover {
+    color: gold;
+  }
   section {
-    padding: 40px 5%;
+    padding: 60px 5%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -40,7 +62,7 @@
     margin: 20px auto;
     display: block;
   }
-  /* Split screen */
+  /* Split cards */
   .split {
     display: flex;
     gap: 20px;
@@ -77,40 +99,46 @@
     background: white;
     border-radius: 50%;
   }
-  /* Versus intro */
+  /* Intro VS */
   #intro {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     background: radial-gradient(circle at center, #000, #111);
-    min-height: 100vh;
     text-align: center;
-    animation: fadeIn 1.5s ease forwards;
-  }
-  #intro h1 {
-    font-size: 3rem;
-    animation: popIn 1s ease forwards;
-  }
-  #intro p {
-    opacity: 0;
-    animation: fadeIn 1.5s ease forwards 1.5s;
   }
   #versus {
     font-size: 4rem;
     font-weight: bold;
     color: red;
-    opacity: 0;
-    animation: flash 1s infinite alternate 2s;
+    animation: flash 1s infinite alternate;
+    cursor: pointer;
+    margin: 20px 0;
   }
-  @keyframes fadeIn { to { opacity: 1; } }
-  @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes flash { from { opacity: 0; } to { opacity: 1; } }
+  .next-btn {
+    margin-top: 30px;
+    padding: 10px 20px;
+    background: gold;
+    color: black;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 6px;
+  }
+  .next-btn:hover {
+    background: orange;
+  }
 </style>
 </head>
 <body>
 
-<!-- Mogul Talk Intro -->
+<nav>
+  <a href="#intro">Intro</a>
+  <a href="#earnings">Earnings</a>
+  <a href="#breakdown">Revenue</a>
+  <a href="#growth">Growth</a>
+  <a href="#moves">Power Moves</a>
+</nav>
+
+<!-- Intro -->
 <section id="intro" class="visible">
   <h1 class="highlight-ross">Rick Ross</h1>
   <div id="versus">VS</div>
@@ -118,12 +146,15 @@
   <p>Mogul Talk — Hip-Hop Empire Showdown</p>
 </section>
 
-<section>
+<!-- Earnings -->
+<section id="earnings">
   <h2>Lifetime Gross Earnings</h2>
   <canvas id="grossChart"></canvas>
+  <button class="next-btn" data-next="#breakdown">Next: Revenue Breakdown</button>
 </section>
 
-<section>
+<!-- Revenue Breakdown -->
+<section id="breakdown">
   <h2>Revenue Breakdown</h2>
   <div class="split">
     <div class="card ross-card">
@@ -133,14 +164,18 @@
       <canvas id="breakdown50"></canvas>
     </div>
   </div>
+  <button class="next-btn" data-next="#growth">Next: Wealth Growth</button>
 </section>
 
-<section>
+<!-- Growth -->
+<section id="growth">
   <h2>Wealth Growth Over Time</h2>
   <canvas id="growthChart"></canvas>
+  <button class="next-btn" data-next="#moves">Next: Power Moves</button>
 </section>
 
-<section>
+<!-- Power Moves -->
+<section id="moves">
   <h2>Signature Power Moves</h2>
   <div class="split">
     <div class="card ross-card">
@@ -166,6 +201,32 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  // Scroll animations
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.2 });
+  sections.forEach(sec => observer.observe(sec));
+
+  // Smooth scroll handler
+  function smoothScrollTo(target) {
+    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // VS click -> Earnings
+  document.getElementById('versus').addEventListener('click', () => {
+    smoothScrollTo('#earnings');
+  });
+
+  // Next buttons
+  document.querySelectorAll('.next-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      smoothScrollTo(btn.getAttribute('data-next'));
+    });
+  });
+
   // Charts
   const grossChart = new Chart(document.getElementById('grossChart'), {
     type: 'bar',
@@ -225,17 +286,6 @@
     },
     options: { responsive: true, maintainAspectRatio: false }
   });
-
-  // Scroll animation
-  const sections = document.querySelectorAll('section');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
-  }, { threshold: 0.2 });
-
-  sections.forEach(sec => observer.observe(sec));
 </script>
-
 </body>
 </html>

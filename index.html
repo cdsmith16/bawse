@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bawse vs Curtis</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
 <style>
   body {
     background-color: #111;
@@ -19,24 +18,25 @@
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.9);
     backdrop-filter: blur(5px);
-    padding: 10px;
+    padding: 10px 5%;
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-around;
     z-index: 999;
+    flex-wrap: wrap;
   }
   nav a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    padding: 10px;
+    display: block;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
   }
-  nav a:hover {
-    color: gold;
-  }
+  nav a:hover { color: gold; }
   section {
-    padding: 60px 5%;
+    padding: 80px 5% 60px; /* extra top padding for fixed nav */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -45,43 +45,36 @@
     opacity: 0;
     transform: translateY(40px);
     transition: all 0.8s ease;
+    box-sizing: border-box;
   }
   section.visible {
     opacity: 1;
     transform: translateY(0);
   }
-  h1, h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
+  h1, h2 { text-align: center; margin-bottom: 20px; }
   .highlight-ross { color: gold; }
   .highlight-50 { color: silver; }
   canvas {
-    max-width: 100%;
+    width: 100% !important;
     height: auto !important;
-    margin: 20px auto;
-    display: block;
+    max-width: 600px;
   }
-  /* Split cards */
   .split {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
   }
   .split .card {
-    flex: 1;
-    min-width: 280px;
+    flex: 1 1 300px;
     padding: 20px;
     border-radius: 8px;
     box-sizing: border-box;
   }
   .ross-card { background: linear-gradient(145deg, #FFD700, #B8860B); }
   .cent-card { background: linear-gradient(145deg, #C0C0C0, #505050); }
-  ul.timeline {
-    list-style: none;
-    padding: 0;
-  }
+  ul.timeline { list-style: none; padding: 0; }
   ul.timeline li {
     padding: 10px 0;
     border-left: 2px solid white;
@@ -99,11 +92,7 @@
     background: white;
     border-radius: 50%;
   }
-  /* Intro VS */
-  #intro {
-    background: radial-gradient(circle at center, #000, #111);
-    text-align: center;
-  }
+  #intro { background: radial-gradient(circle at center, #000, #111); text-align: center; }
   #versus {
     font-size: 4rem;
     font-weight: bold;
@@ -111,34 +100,34 @@
     animation: flash 1s infinite alternate;
     cursor: pointer;
     margin: 20px 0;
+    touch-action: manipulation;
   }
   @keyframes flash { from { opacity: 0; } to { opacity: 1; } }
   .next-btn {
     margin-top: 30px;
-    padding: 10px 20px;
+    padding: 12px 20px;
     background: gold;
     color: black;
     border: none;
     cursor: pointer;
     font-weight: bold;
     border-radius: 6px;
+    font-size: 1rem;
+    touch-action: manipulation;
   }
-  .next-btn:hover {
-    background: orange;
-  }
+  .next-btn:hover { background: orange; }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="#intro">Intro</a>
-  <a href="#earnings">Earnings</a>
-  <a href="#breakdown">Revenue</a>
-  <a href="#growth">Growth</a>
-  <a href="#moves">Power Moves</a>
+  <a href="#intro" data-scroll>Intro</a>
+  <a href="#earnings" data-scroll>Earnings</a>
+  <a href="#breakdown" data-scroll>Revenue</a>
+  <a href="#growth" data-scroll>Growth</a>
+  <a href="#moves" data-scroll>Power Moves</a>
 </nav>
 
-<!-- Intro -->
 <section id="intro" class="visible">
   <h1 class="highlight-ross">Rick Ross</h1>
   <div id="versus">VS</div>
@@ -146,35 +135,27 @@
   <p>Mogul Talk — Hip-Hop Empire Showdown</p>
 </section>
 
-<!-- Earnings -->
 <section id="earnings">
   <h2>Lifetime Gross Earnings</h2>
   <canvas id="grossChart"></canvas>
   <button class="next-btn" data-next="#breakdown">Next: Revenue Breakdown</button>
 </section>
 
-<!-- Revenue Breakdown -->
 <section id="breakdown">
   <h2>Revenue Breakdown</h2>
   <div class="split">
-    <div class="card ross-card">
-      <canvas id="breakdownRoss"></canvas>
-    </div>
-    <div class="card cent-card">
-      <canvas id="breakdown50"></canvas>
-    </div>
+    <div class="card ross-card"><canvas id="breakdownRoss"></canvas></div>
+    <div class="card cent-card"><canvas id="breakdown50"></canvas></div>
   </div>
   <button class="next-btn" data-next="#growth">Next: Wealth Growth</button>
 </section>
 
-<!-- Growth -->
 <section id="growth">
   <h2>Wealth Growth Over Time</h2>
   <canvas id="growthChart"></canvas>
   <button class="next-btn" data-next="#moves">Next: Power Moves</button>
 </section>
 
-<!-- Power Moves -->
 <section id="moves">
   <h2>Signature Power Moves</h2>
   <div class="split">
@@ -201,7 +182,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  // Scroll animations
+  // Intersection animation
   const sections = document.querySelectorAll('section');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -210,10 +191,21 @@
   }, { threshold: 0.2 });
   sections.forEach(sec => observer.observe(sec));
 
-  // Smooth scroll handler
-  function smoothScrollTo(target) {
-    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+  // Smooth scroll with offset
+  function smoothScrollTo(targetId) {
+    const offset = document.querySelector('nav').offsetHeight;
+    const element = document.querySelector(targetId);
+    const y = element.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
   }
+
+  // Nav clicks
+  document.querySelectorAll('a[data-scroll]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      smoothScrollTo(link.getAttribute('href'));
+    });
+  });
 
   // VS click -> Earnings
   document.getElementById('versus').addEventListener('click', () => {
@@ -228,7 +220,7 @@
   });
 
   // Charts
-  const grossChart = new Chart(document.getElementById('grossChart'), {
+  new Chart(document.getElementById('grossChart'), {
     type: 'bar',
     data: {
       labels: ['Rick Ross', '50 Cent'],
@@ -241,7 +233,7 @@
     options: { responsive: true, maintainAspectRatio: false }
   });
 
-  const breakdownRoss = new Chart(document.getElementById('breakdownRoss'), {
+  new Chart(document.getElementById('breakdownRoss'), {
     type: 'pie',
     data: {
       labels: ['Music Sales', 'Streaming', 'Touring', 'Wingstop', 'Investments'],
@@ -253,7 +245,7 @@
     options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Rick Ross Revenue Breakdown' } } }
   });
 
-  const breakdown50 = new Chart(document.getElementById('breakdown50'), {
+  new Chart(document.getElementById('breakdown50'), {
     type: 'pie',
     data: {
       labels: ['Music Sales', 'Touring', 'Vitaminwater', 'TV/Film', 'Merch & Liquor'],
@@ -265,23 +257,13 @@
     options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '50 Cent Revenue Breakdown' } } }
   });
 
-  const growthChart = new Chart(document.getElementById('growthChart'), {
+  new Chart(document.getElementById('growthChart'), {
     type: 'line',
     data: {
       labels: ['2003', '2005', '2009', '2013', '2017', '2021', '2025'],
       datasets: [
-        {
-          label: 'Rick Ross',
-          data: [1, 5, 15, 40, 70, 100, 120],
-          borderColor: 'gold',
-          fill: false
-        },
-        {
-          label: '50 Cent',
-          data: [10, 70, 160, 180, 130, 150, 170],
-          borderColor: 'silver',
-          fill: false
-        }
+        { label: 'Rick Ross', data: [1, 5, 15, 40, 70, 100, 120], borderColor: 'gold', fill: false },
+        { label: '50 Cent', data: [10, 70, 160, 180, 130, 150, 170], borderColor: 'silver', fill: false }
       ]
     },
     options: { responsive: true, maintainAspectRatio: false }

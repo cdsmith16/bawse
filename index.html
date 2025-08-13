@@ -195,6 +195,132 @@ background: orange;
 transform: scale(0.98);
 }
 
+/* Audio Player Styles */
+.audio-player {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background: rgba(0, 0, 0, 0.9);
+border: 2px solid gold;
+border-radius: 12px;
+padding: 15px;
+z-index: 1000;
+display: flex;
+align-items: center;
+gap: 10px;
+backdrop-filter: blur(10px);
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+max-width: 300px;
+transition: transform 0.3s ease;
+}
+
+.audio-player:hover {
+transform: translateY(-2px);
+}
+
+.audio-controls {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.play-btn {
+background: gold;
+border: none;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 16px;
+color: black;
+transition: all 0.3s ease;
+}
+
+.play-btn:hover {
+background: orange;
+transform: scale(1.1);
+}
+
+.volume-control {
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.volume-slider {
+width: 60px;
+height: 4px;
+background: #333;
+border-radius: 2px;
+outline: none;
+-webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+-webkit-appearance: none;
+width: 12px;
+height: 12px;
+background: gold;
+border-radius: 50%;
+cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+width: 12px;
+height: 12px;
+background: gold;
+border-radius: 50%;
+cursor: pointer;
+border: none;
+}
+
+.track-info {
+color: white;
+font-size: 0.8rem;
+line-height: 1.2;
+flex: 1;
+min-width: 0;
+}
+
+.track-title {
+font-weight: bold;
+color: gold;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.track-artist {
+color: #ccc;
+font-size: 0.7rem;
+}
+
+/* Mobile audio player adjustments */
+@media (max-width: 768px) {
+.audio-player {
+bottom: 10px;
+right: 10px;
+left: 10px;
+right: 10px;
+max-width: none;
+padding: 12px;
+}
+
+```
+.track-info {
+  font-size: 0.75rem;
+}
+
+.volume-slider {
+  width: 40px;
+}
+```
+
+}
+
 /* Loading indicator for charts */
 .chart-container {
 position: relative;
@@ -290,6 +416,29 @@ font-size: 0.9rem;
     </div>
   </div>
 </section>
+
+<!-- Audio Player -->
+
+<div class="audio-player">
+  <div class="audio-controls">
+    <button class="play-btn" id="playPauseBtn">▶</button>
+  </div>
+  <div class="track-info">
+    <div class="track-title">B.M.F. Instrumental</div>
+    <div class="track-artist">Rick Ross Style Beat</div>
+  </div>
+  <div class="volume-control">
+    <span style="color: gold; font-size: 0.8rem;">🔊</span>
+    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30">
+  </div>
+</div>
+
+<!-- Hidden Audio Element -->
+
+<audio id="backgroundAudio" loop preload="metadata">
+  <source src="https://hipstrumentals.com/wp-content/uploads/2021/05/Rick-Ross-Ft.-Styles-P-B.M.F.-Blowing-Money-Fast-Instrumental-Prod.-By-Lex-Luger.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -539,6 +688,63 @@ font-size: 0.9rem;
       if (chart) chart.resize();
     });
   });
+
+  // Audio Player Functionality
+  const audio = document.getElementById('backgroundAudio');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const volumeSlider = document.getElementById('volumeSlider');
+  
+  let isPlaying = false;
+  
+  // Set initial volume
+  audio.volume = 0.3;
+  
+  // Play/Pause functionality
+  playPauseBtn.addEventListener('click', () => {
+    if (isPlaying) {
+      audio.pause();
+      playPauseBtn.textContent = '▶';
+      isPlaying = false;
+    } else {
+      // Modern browsers require user interaction before playing audio
+      audio.play().then(() => {
+        playPauseBtn.textContent = '⏸';
+        isPlaying = true;
+      }).catch(error => {
+        console.log('Audio play failed:', error);
+        // You might want to show a message to the user here
+      });
+    }
+  });
+  
+  // Volume control
+  volumeSlider.addEventListener('input', (e) => {
+    audio.volume = e.target.value / 100;
+  });
+  
+  // Handle audio events
+  audio.addEventListener('ended', () => {
+    playPauseBtn.textContent = '▶';
+    isPlaying = false;
+  });
+  
+  audio.addEventListener('pause', () => {
+    playPauseBtn.textContent = '▶';
+    isPlaying = false;
+  });
+  
+  audio.addEventListener('play', () => {
+    playPauseBtn.textContent = '⏸';
+    isPlaying = true;
+  });
+  
+  // Optional: Auto-play attempt (will only work if user has interacted with the page)
+  document.addEventListener('click', () => {
+    if (!isPlaying && audio.paused) {
+      // This is a gentle attempt to start music after user interaction
+      // Remove this if you don't want any auto-play behavior
+    }
+  }, { once: true });
 </script>
 
 </body>
